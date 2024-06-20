@@ -82,5 +82,5 @@ jobs:
           iac_version: 'v14'
           policy_type: 'aws'
           only_warn: true
-          iac_dir: infrastructure
+          iac_dir: terraform
         
