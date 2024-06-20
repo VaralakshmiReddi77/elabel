@@ -83,4 +83,32 @@ jobs:
           policy_type: 'aws'
           only_warn: true
           iac_dir: terraform
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.4
+
+      - name: Terraform Fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+        working-directory: ${{ env.working-directory }}
+        env:
+          TF_CLI_ARGS_init: "-backend-config=role_arn=arn:aws:iam::99999999:role/my-github-actions-role -upgrade -reconfigure"
+          TF_VAR_assume_role: "my-github-actions-role"
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ env.working-directory }}
+        env:
+          TF_VAR_assume_role: "my-github-actions-role"
         
